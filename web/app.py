@@ -1,0 +1,36 @@
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
+import os
+
+app = Flask(__name__)
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload_video():
+    print("업로드 요청 받음")
+    print("request.files:", request.files)
+    print("request.form:", request.form)
+
+    video = request.files.get('video')
+    name = request.form.get('name', 'noname').strip() or 'noname'
+    filename = secure_filename(f"{name}.webm")
+    print("이름:", name)
+    print("파일:", video.filename if video else "비어 있음")
+
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    print("저장 경로:", filepath)
+
+    if video:
+        video.save(filepath)
+        if os.path.exists(filepath):
+            return "영상 저장 완료"
+        else:
+            return "영상 저장 실패"
+
+if __name__ == '__main__':
+    app.run(debug=True)

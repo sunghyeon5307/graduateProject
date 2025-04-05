@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>얼굴 촬영</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h3>얼굴을 360도로 돌리면서 촬영하세요</h3>
+    <div class="container">
+        <video id="video" autoplay playsinline></video>
+        <div class="controls">
+            <label for="nameInput">이름 입력:</label>
+            <input type="text" id="nameInput" placeholder="이름을 입력하세요">
+            <button id="startButton">촬영 시작</button>
+        </div>
+    </div>
+    <script src="/static/check.js"></script>
+</body>
+</html>
