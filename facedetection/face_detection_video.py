@@ -2,7 +2,7 @@ import cv2
 from mtcnn import MTCNN
 
 detector = MTCNN()
-video_path = "/Users/bagseonghyeon/Documents/지켜락/facedetection/downloads/yt_video_30s.mp4"
+video_path = "/Users/bagseonghyeon/Documents/지켜락/web/video/sususu.webm"
 
 frame_skip = 3  
 frame_count = 0

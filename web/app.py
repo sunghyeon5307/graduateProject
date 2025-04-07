@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 import os
 
 app = Flask(__name__)
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'video')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route('/')
