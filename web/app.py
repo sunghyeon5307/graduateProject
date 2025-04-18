@@ -2,8 +2,6 @@ from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
 import os
 
-from face import run_detection
-
 app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'video')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -27,7 +25,6 @@ def upload_video():
     if video:
         video.save(filepath)
         if os.path.exists(filepath):
-            run_detection(filepath)
             return "영상 저장 완료"
         else:
             pass
