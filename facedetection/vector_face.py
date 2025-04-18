@@ -14,8 +14,8 @@ def get_embedding(img_path):
     embedding = embedder.embeddings(img)
     return embedding
 
-face1 = get_embedding("/Users/bagseonghyeon/Documents/지켜락/facedetection/지젤.jpeg")
-face2 = get_embedding("/Users/bagseonghyeon/Documents/지켜락/facedetection/카리나.jpeg")
+face1 = get_embedding("/Users/bagseonghyeon/Documents/지켜락/facedetection/data/지젤.jpeg")
+face2 = get_embedding("/Users/bagseonghyeon/Documents/지켜락/facedetection/data/카리나.jpeg")
 face1 = face1.flatten() # (1, 512) -> (512,)
 face2 = face2.flatten()
 similarity = 1 - cosine(face1, face2)

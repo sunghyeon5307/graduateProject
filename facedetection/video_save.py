@@ -1,12 +1,12 @@
 import subprocess
 
-url = "https://www.youtube.com/watch?v=_xaJEcIM2uc"
-output_path = "downloads/yt_video_30s.mp4"
+url = "https://www.youtube.com/watch?v=iiuRiJzhyC4&list=PLCrxAHqzSbA0n5My5zlJRIu8saGxicqU_"
+output_path = "downloads/trafficlight.mp4"
 
 command = [
     "yt-dlp",
     "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]",
-    "--download-sections", "*00:00:00-00:00:30",  # 앞 30초만
+    #"--download-sections", "*00:00:00-00:00:30",  # 앞 30초만
     "-o", output_path,
     url
 ]
