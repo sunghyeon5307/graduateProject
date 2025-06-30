@@ -66,7 +66,7 @@ def start_capture():
     def run():
         from face_detection import vector_video
         success = vector_video(name)
-        msg = "✅ 벡터 저장 완료" if success else "❌ 촬영 실패 또는 중단됨"
+        msg = "벡터 저장 완료" if success else "촬영 실패 또는 중단됨"
         messagebox.showinfo("처리 결과", msg)
         stop_camera()
 
@@ -79,9 +79,8 @@ def stop_camera():
         cap.release()
         camera_label.configure(image='')
 
-# GUI 설정
 root = tk.Tk()
-root.title("얼굴 등록기")
+root.title("얼굴 등록")
 root.geometry("400x500")
 
 tk.Label(root, text="이름 입력:").pack(pady=10)
@@ -90,7 +89,6 @@ name_entry.pack()
 
 tk.Button(root, text="촬영 시작", command=start_capture).pack(pady=10)
 
-# 캠 영상 표시용 라벨
 camera_label = tk.Label(root)
 camera_label.pack()
 

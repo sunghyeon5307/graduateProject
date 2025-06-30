@@ -21,7 +21,7 @@ def speak(text):
     os.makedirs("tts", exist_ok=True)
     tts = gTTS(text=text, lang='ko')
     tts.save("tts/temp.mp3")
-    os.system("afplay tts/temp.mp3")  # macOS 기준
+    os.system("afplay tts/temp.mp3") 
 
 def save_vectors(name, vectors):
     os.makedirs("facevectors", exist_ok=True)
@@ -38,12 +38,11 @@ def save_vectors(name, vectors):
     conn.commit()
     conn.close()
     np.save(f"facevectors/{name}.npy", stacked)
-    print(f"✅ {name}.npy 저장 완료: shape = {stacked.shape}")
+    print(f"{name}.npy 저장 완료: shape = {stacked.shape}")
 
 def vector_video(name):
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
-        print("❗ 카메라 연결 실패")
         return False
 
     vectors = []
@@ -62,7 +61,7 @@ def vector_video(name):
             if faces:
                 vec = faces[0].embedding / np.linalg.norm(faces[0].embedding)
                 vectors.append(vec)
-                print(f"✅ 벡터 추출 완료 (angle {i+1})")
+                print(f"벡터 추출 완료 (angle {i+1})")
                 break
 
             cv2.putText(frame, instruction, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
@@ -80,5 +79,4 @@ def vector_video(name):
         save_vectors(name, vectors)
         return True
     else:
-        print("❗ 벡터 수 부족")
         return False
