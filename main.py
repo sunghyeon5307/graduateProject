@@ -1,96 +1,121 @@
-# import tkinter as tk
-# from tkinter import messagebox
-# import threading
-# from face_detection import vector_video
-
-# def start_capture():
-#     name = name_entry.get().strip()
-#     if not name:
-#         messagebox.showerror("입력 오류", "이름을 입력하세요")
-#         return
-
-#     def run():
-#         success = vector_video(name)
-#         msg = "✅ 벡터 저장 완료" if success else "❌ 촬영 실패 또는 중단됨"
-#         messagebox.showinfo("처리 결과", msg)
-
-#     threading.Thread(target=run).start()
-
-# # GUI 설정
-# root = tk.Tk()
-# root.title("얼굴 등록기")
-# root.geometry("300x180")
-
-# tk.Label(root, text="이름 입력:").pack(pady=10)
-# name_entry = tk.Entry(root)
-# name_entry.pack()
-
-# tk.Button(root, text="촬영 시작", command=start_capture).pack(pady=20)
-
-# root.mainloop()
-
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import cv2
 import threading
+import customtkinter as ctk
+from camera import start_camera, stop_camera, show_camera_loop
+
 
 cap = None
 running = False
 
-def show_camera():
-    if not running:
-        return
 
-    ret, frame = cap.read()
-    if ret:
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(frame)
-        imgtk = ImageTk.PhotoImage(image=img)
-        camera_label.imgtk = imgtk
-        camera_label.configure(image=imgtk)
-    camera_label.after(10, show_camera)
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("얼굴 등록")
+        self.geometry("2560x1600")
+        self.configure(bg="white")
 
-def start_capture():
-    global cap, running
-    name = name_entry.get().strip()
-    if not name:
-        messagebox.showerror("입력 오류", "이름을 입력하세요")
-        return
+        container = tk.Frame(self, bg="white")
+        container.pack(fill="both", expand=True)
 
-    if not running:
-        cap = cv2.VideoCapture(0)
-        running = True
-        show_camera()
+        self.frames = {}
+        for F in (Page1, Page2, Page3):
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
 
-    def run():
+        self.show_frame(Page1)
+
+    def show_frame(self, page_class):
+        frame = self.frames[page_class]
+        frame.tkraise()
+
+
+class Page1(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, bg="white")
+        self.controller = controller
+
+
+        tk.Label(self, text="이름 입력:", fg="black", bg="white", font=("Helvetica", 30, "bold")).grid(row=0,column=0,padx=(50,0),pady=(290,20))
+        self.name_entry = tk.Entry(self, fg="black", bg="lightgray", relief="flat", highlightthickness=0, bd=0, font=("Helvetica", 20),width=20)
+        self.name_entry.grid(row=0,column=1,ipady=8,pady=(290,20))
+
+
+        # 촬영시작 버튼
+        ctk.CTkButton(
+            self, text="촬영 시작", width=300, height=50, corner_radius=18,
+            command=self.start_capture,
+            fg_color="lightgray", text_color="black", hover_color="red",
+            font=("Helvetica", 18, "bold")
+        ).grid(row=1, column=1,padx=10,pady=(50,10))
+
+        # 두번째 페이지 버튼
+        ctk.CTkButton(
+            self, text="외부인 확인", width=300, height=50, corner_radius=18,
+            command=lambda: self.controller.show_frame(Page2),
+            fg_color="lightgray", text_color="black", hover_color="red",
+            font=("Helvetica", 18, "bold")
+        ).grid(row=2,column=1, padx=10, pady=10)
+
+        # 세번째 페이지 버튼
+        ctk.CTkButton(
+            self, text="비밀번호 등록", width=300, height=50, corner_radius=18,
+            command=lambda: self.controller.show_frame(Page3),
+            fg_color="lightgray", text_color="black", hover_color="red",
+            font=("Helvetica", 18, "bold")
+        ).grid(row=3, column=1, padx=10, pady=10)
+
+
+        self.video_label = tk.Label(self, bg="lightgray")
+        self.video_label.grid(row=0, column=2, rowspan=10, padx=(60,10), pady=200)
+        self.video_label.config(width=800, height=480)
+
+
+        start_camera()
+        show_camera_loop(self.video_label, self)
+        
+    def start_capture(self):
         from face_detection import vector_video
-        success = vector_video(name)
-        msg = "벡터 저장 완료" if success else "촬영 실패 또는 중단됨"
-        messagebox.showinfo("처리 결과", msg)
-        stop_camera()
+        name = self.name_entry.get().strip()
 
-    threading.Thread(target=run).start()
+        if not name:
+            messagebox.showerror("입력 오류", "이름을 입력하세요")
+            return
 
-def stop_camera():
-    global running, cap
-    running = False
-    if cap:
-        cap.release()
-        camera_label.configure(image='')
+        def run():
+            success = vector_video(name)
+            msg = "벡터 저장 완료" if success else "촬영 실패 또는 중단됨"
+            messagebox.showinfo("처리 결과", msg)
 
-root = tk.Tk()
-root.title("얼굴 등록")
-root.geometry("400x500")
+        threading.Thread(target=run).start()
 
-tk.Label(root, text="이름 입력:").pack(pady=10)
-name_entry = tk.Entry(root)
-name_entry.pack()
+class Page2(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, bg="white")
+        self.controller = controller  
+        ctk.CTkButton(
+            self, text="⬅",
+            width=100, height=50, corner_radius=14, 
+            fg_color="lightgray", text_color="black", hover_color="red",    
+            font=("Helvetica", 30, "bold"),
+            command=lambda: controller.show_frame(Page1)
+        ).grid(row=0, column=0,padx=30,pady=30)
 
-tk.Button(root, text="촬영 시작", command=start_capture).pack(pady=10)
+class Page3(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, bg="white")
+        self.controller = controller 
+        ctk.CTkButton(
+            self, text="⬅",
+            width=100, height=50, corner_radius=14, 
+            fg_color="lightgray", text_color="black", hover_color="red",    
+            font=("Helvetica", 30, "bold"),
+            command=lambda: controller.show_frame(Page1)
+        ).grid(row=0, column=0,padx=30,pady=30)
 
-camera_label = tk.Label(root)
-camera_label.pack()
-
-root.mainloop()
-
+if __name__ == "__main__":
+    App().mainloop()
