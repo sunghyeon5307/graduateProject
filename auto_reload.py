@@ -22,7 +22,7 @@ class ReloadHandler(FileSystemEventHandler):
             self.start_process()
 
 if __name__ == "__main__":
-    script = "main.py"  # 실행할 파일 경로
+    script = "main_page.py"  # 실행할 파일 경로
     event_handler = ReloadHandler(script)
     observer = Observer()
     observer.schedule(event_handler, path=os.path.dirname(script) or ".", recursive=True)

@@ -5,7 +5,8 @@ import cv2
 import threading
 import customtkinter as ctk
 from camera import start_camera, stop_camera, show_camera_loop
-
+from intruder_page import Page2
+from password_page import Page3 
 
 cap = None
 running = False
@@ -23,14 +24,15 @@ class App(tk.Tk):
 
         self.frames = {}
         for F in (Page1, Page2, Page3):
+            page_name = F.__name__
             frame = F(container, self)
-            self.frames[F] = frame
+            self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(Page1)
+        self.show_frame("Page1")
 
-    def show_frame(self, page_class):
-        frame = self.frames[page_class]
+    def show_frame(self, page_name):
+        frame = self.frames[page_name]
         frame.tkraise()
 
 
@@ -56,7 +58,7 @@ class Page1(tk.Frame):
         # 두번째 페이지 버튼
         ctk.CTkButton(
             self, text="외부인 확인", width=300, height=50, corner_radius=18,
-            command=lambda: self.controller.show_frame(Page2),
+            command=lambda: self.controller.show_frame("Page2"),
             fg_color="lightgray", text_color="black", hover_color="red",
             font=("Helvetica", 18, "bold")
         ).grid(row=2,column=1, padx=10, pady=10)
@@ -64,7 +66,7 @@ class Page1(tk.Frame):
         # 세번째 페이지 버튼
         ctk.CTkButton(
             self, text="비밀번호 등록", width=300, height=50, corner_radius=18,
-            command=lambda: self.controller.show_frame(Page3),
+            command=lambda: self.controller.show_frame("Page3"),
             fg_color="lightgray", text_color="black", hover_color="red",
             font=("Helvetica", 18, "bold")
         ).grid(row=3, column=1, padx=10, pady=10)
@@ -93,29 +95,7 @@ class Page1(tk.Frame):
 
         threading.Thread(target=run).start()
 
-class Page2(tk.Frame):
-    def __init__(self, parent, controller):
-        super().__init__(parent, bg="white")
-        self.controller = controller  
-        ctk.CTkButton(
-            self, text="⬅",
-            width=100, height=50, corner_radius=14, 
-            fg_color="lightgray", text_color="black", hover_color="red",    
-            font=("Helvetica", 30, "bold"),
-            command=lambda: controller.show_frame(Page1)
-        ).grid(row=0, column=0,padx=30,pady=30)
 
-class Page3(tk.Frame):
-    def __init__(self, parent, controller):
-        super().__init__(parent, bg="white")
-        self.controller = controller 
-        ctk.CTkButton(
-            self, text="⬅",
-            width=100, height=50, corner_radius=14, 
-            fg_color="lightgray", text_color="black", hover_color="red",    
-            font=("Helvetica", 30, "bold"),
-            command=lambda: controller.show_frame(Page1)
-        ).grid(row=0, column=0,padx=30,pady=30)
-
+    
 if __name__ == "__main__":
     App().mainloop()
