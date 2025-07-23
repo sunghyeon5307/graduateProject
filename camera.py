@@ -7,7 +7,7 @@ running = False
 def start_camera():
     global cap, running
     if not running:
-        cap = cv2.VideoCapture(0)  # macOS 내장캠
+        cap = cv2.VideoCapture(0) 
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         running = True        

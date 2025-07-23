@@ -77,7 +77,8 @@ class Page3(tk.Frame):
         self.origin_password.delete(0, tk.END)
 
     def send_password_to_pi(self, new_pw):
-        url = "http://10.150.2.201:5000/update_password" 
+        # 숫자키패드 ip
+        url = "http://10.200.129.113:5000/update_password" 
         response = requests.post(url, json={"password": new_pw})
         print(response.text)
 

@@ -11,7 +11,6 @@ from password_page import Page3
 cap = None
 running = False
 
-
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
